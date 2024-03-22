@@ -63,6 +63,35 @@ def state(func):
 
     return State(exits, source, new_source, globals_from_func_definition[func.__name__])
     
+def highlight_line(text: str, line_index: int) -> str:
+    """
+    Highlight a specific line in a multiline string by adding an arrow or indentation.
+
+    Args:
+        text (str): The multiline string.
+        line_index (int): The index of the line to highlight (0-based).
+
+    Returns:
+        str: The modified string with the specified line highlighted.
+
+    Example:
+        >>> multiline_string = \"\"\"This is a multiline
+        ... string in Python.
+        ... It has multiple lines.\"\"\"
+        >>> highlighted_text = highlight_line(multiline_string, 1)
+        >>> print(highlighted_text)
+            This is a multiline
+        --> string in Python.
+            It has multiple lines.
+    """
+    lines = text.split('\n')
+    highlighted_lines = []
+    for i, line in enumerate(lines):
+        if i == line_index:
+            highlighted_lines.append("--> " + line)
+        else:
+            highlighted_lines.append("    " + line)
+    return '\n'.join(highlighted_lines)
 
 @dataclass 
 class State:
@@ -87,5 +116,15 @@ class State:
             if state is None:
                 return
             line_numbers, state = state.run_until_complete()
+
+    def name(self):
+        return self.func_to_make_generator.__name__
+    
+    def code_line(self, line_number):
+        lines = self.raw_source.splitlines()
+        return lines[line_number]
+    
+    def code_highlighted(self, line_number):
+        return highlight_line(self.raw_source, line_number)
 
 
