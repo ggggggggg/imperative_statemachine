@@ -131,7 +131,7 @@ class FakeAdrWorld(World):
     def update_with_elapsed(self, elapsed_s):
         # v = l*didt
         didt = (self.voltage_V-self.current_A*self.resistance_Ohm)/self.inductance_H
-        print(f"{elapsed_s=:.2f} {didt=:.4f} {self.current_A*self.resistance_Ohm=:.4f}")
+        # print(f"{elapsed_s=:.2f} {didt=:.4f} {self.current_A*self.resistance_Ohm=:.4f}")
 
         self.current_A += didt*elapsed_s
 
@@ -187,9 +187,24 @@ print(result)
 
 
 # features to add
-# 1. world argument
-# 2. world.wait(seconds=)
+# 1. world argument DONE
+# 2. world.wait(seconds=) DONE
 # 3. world.wait_for_input_or_time(message, seconds)
-# 4. adr-ish demo
+# 4. adr-ish demo DONE
 # 5. duck db data log
 
+
+from asciimatics.screen import Screen
+import time
+
+def demo(screen):
+    for i in range(100):
+        screen.print_at(f"""Hello world!\n
+                        \n
+                        {i}\n
+                        boom
+                        """, 0, 0)
+        screen.refresh()
+        time.sleep(0.1)
+
+Screen.wrapper(demo)
